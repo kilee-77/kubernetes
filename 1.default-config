@@ -1,0 +1,17 @@
+#selinux 비활성화
+setenforce 0
+sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
+
+#swap 비활성화
+swapoff -a
+sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+
+#테스트 환경으로 방화벽은 비활성화
+systemctl disable --now firewalld
+
+#timezone 재설정
+timedatectl set-timezone Asia/Seoul
+
+#dnf update
+dnf update -y
+  
