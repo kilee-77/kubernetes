@@ -1,0 +1,6 @@
+cat <<EOF | sudo tee -a /etc/hosts
+10.10.10.200 master
+10.10.10.201 work1
+10.10.10.202 work2
+10.10.10.203 work3
+EOF
