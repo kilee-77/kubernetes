@@ -1,0 +1,9 @@
+#hostname 변경
+hostnamectl set-hostname k8s-master && exec bash
+hostnamectl set-hostname k8s-work1 && exec bash
+hostnamectl set-hostname k8s-work2 && exec bash
+hostnamectl set-hostname k8s-work3 && exec bash
+
+#IP변경
+192.168.0.200 ~
+10.10.10.200 ~
