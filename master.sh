@@ -13,7 +13,7 @@ swapoff -a
 sed -i '/ swap / s/^#//' /etc/fstab
 sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
 free -h
-getneforce
+getenforce
 
 #hostname rename
 hostnamectl set-hostname "master" && exec bash
