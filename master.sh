@@ -24,7 +24,7 @@ free -h
 getenforce
 
 #hostname rename
-hostnamectl set-hostname "master" && exec bash
+#hostnamectl set-hostname "master" && exec bash
 
 #hosts
 cat <<EOF | sudo tee -a /etc/hosts
