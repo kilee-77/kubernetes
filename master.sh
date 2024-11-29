@@ -9,22 +9,12 @@ timedatectl set-timezone Asia/Seoul
 systemctl disable --now firewalld
 setenforce 0
 
-#IP Change
-#sed -i 's/address1=192\.168\.0\.61\/24/address1=192\.168\.0\.200\/24/' /etc/NetworkManager/system-connections/ens33.nmconnection
-#sed -i 's/method=auto/method=manual\naddress1=10.10.10.200\/24/' /etc/NetworkManager/system-connections/ens35.nmconnection
-#nmcli connection reload
-#nmcli connection up ens33
-#nmcli connection up ens35
-
 #swap 0, selinux off
 swapoff -a
 sed -i '/ swap / s/^#//' /etc/fstab
 sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
 free -h
 getenforce
-
-#hostname rename
-#hostnamectl set-hostname "master" && exec bash
 
 #hosts
 cat <<EOF | sudo tee -a /etc/hosts
@@ -50,7 +40,7 @@ EOF
 sysctl --system
 
 #dnf install -y dnf-utils device-mapper-persistent-data lvm2
-#dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 dnf update -y && dnf install -y containerd.io
 
 mkdir -p /etc/containerd
@@ -74,6 +64,17 @@ EOF
 dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 
 systemctl enable --now kubelet
+
+#hostname rename
+hostnamectl set-hostname "master" && exec bash
+
+#IP Change
+sudo sed -i 's/address1=192\.168\.0\.61\/24/address1=192\.168\.0\.200\/24/' /etc/NetworkManager/system-connections/ens33.nmconnection
+sudo sed -i '/\[ipv4\]/,/^\[/{/method=/s/auto/static/}' /etc/NetworkManager/system-connections/ens35.nmconnection
+sudo sed -i '/\[ipv4\]/,/^\[/{/address1=/s/\(.*\)/address1=10.10.10.200\/24,10.10.10.1/}' /etc/NetworkManager/system-connections/ens35.nmconnection
+nmcli connection reload
+nmcli connection up ens33
+nmcli connection up ens35
 
 #kubeadm init \
 #--control-plane-endpoint 192.168.0.200 \
