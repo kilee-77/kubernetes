@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#dnf update
 dnf update -y
 
 #timezone setup
@@ -50,8 +50,6 @@ sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.t
 systemctl restart containerd
 systemctl enable --now containerd
 
-
-
 cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -65,29 +63,16 @@ dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 
 systemctl enable --now kubelet
 
-#hostname rename
-hostnamectl set-hostname "master" && exec bash
+kubeadm init \
+--control-plane-endpoint 192.168.0.200 \
+--pod-network-cidr 10.10.10.0/24
 
-#IP Change
-sudo sed -i 's/address1=192\.168\.0\.61\/24/address1=192\.168\.0\.200\/24/' /etc/NetworkManager/system-connections/ens33.nmconnection
-sudo sed -i '/\[ipv4\]/,/^\[/{/method=/s/auto/static/}' /etc/NetworkManager/system-connections/ens35.nmconnection
-sudo sed -i '/\[ipv4\]/,/^\[/{/address1=/s/\(.*\)/address1=10.10.10.200\/24,10.10.10.1/}' /etc/NetworkManager/system-connections/ens35.nmconnection
-nmcli connection reload
-nmcli connection up ens33
-nmcli connection up ens35
+mkdir -p $HOME/.kube
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+chown $(id -u):$(id -g) $HOME/.kube/config
 
-#kubeadm init \
-#--control-plane-endpoint 192.168.0.200 \
-#--pod-network-cidr 10.10.10.0/24
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/tigera-operator.yaml
+wget https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/custom-resources.yaml
 
-#yum install -y wget
-
-#mkdir -p $HOME/.kube
-#cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-#chown $(id -u):$(id -g) $HOME/.kube/config
-
-#kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/tigera-operator.yaml
-#wget https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/custom-resources.yaml
-
-#sed -i 's/192\.168\.0\.0\/16/10.10.10.0\/24/g' custom-resources.yaml
-#kubectl apply -f custom-resources.yaml
+sed -i 's/192\.168\.0\.0\/16/10.10.10.0\/24/g' custom-resources.yaml
+kubectl apply -f custom-resources.yaml
