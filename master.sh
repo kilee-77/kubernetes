@@ -1,4 +1,6 @@
-#dnf update -y
+#!/bin/bash
+
+dnf update -y
 
 #timezone setup
 timedatectl set-timezone Asia/Seoul
@@ -33,7 +35,7 @@ cat <<EOF | sudo tee -a /etc/hosts
 EOF
 
 #IPtables
-ee /etc/sysctl.d/kubernetes.conf<<EOF
+tee /etc/sysctl.d/kubernetes.conf<<EOF
 net.brige.bridge-nf-call-ip6tables = 1
 net.brige.bridge-nf-call-iptables = 1
 net.ipv4.ip_forward = 1
