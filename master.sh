@@ -8,6 +8,10 @@ timedatectl set-timezone Asia/Seoul
 systemctl disable --now firewalld
 setenforce 0
 
+#IP Change
+sed -i 's/address1=192\.168\.0\.61\/24/address1=192\.168\.0\.200\/24/' /etc/NetworkManager/system-connections/ens33.nmconnection
+sed -i 's/method=auto/method=manual\naddress1=10.10.10.200\/24/' /etc/NetworkManager/system-connections/ens35.nmconnection
+
 #swap 0, selinux off
 swapoff -a
 sed -i '/ swap / s/^#//' /etc/fstab
