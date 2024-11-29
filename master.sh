@@ -1,5 +1,4 @@
-
-dnf update -y
+#dnf update -y
 
 #timezone setup
 timedatectl set-timezone Asia/Seoul
