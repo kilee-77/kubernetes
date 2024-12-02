@@ -64,3 +64,5 @@ dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 systemctl enable --now kubelet
 
 #Join command (kubeadm join IP:6443 --token token-key --discovery-token-ca-cert-hash sha256:sha256-key)
+echo Join command (masterkey.sh)
+echo kubeadm join IP:6443 --token token-key --discovery-token-ca-cert-hash sha256:sha256-key
