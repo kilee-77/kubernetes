@@ -1,2 +1,2 @@
 ssh-keygen
-scp ~/.ssh/id_rsa.pub work1:~/.ssh/authroized_keys
+scp ~/.ssh/id_rsa.pub work1:~/.ssh/authorized_keys
