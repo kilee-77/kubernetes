@@ -4,3 +4,10 @@ hostnamectl set-hostname k8s-work1 && exec bash
 hostnamectl set-hostname k8s-work2 && exec bash
 hostnamectl set-hostname k8s-work3 && exec bash
 
+#Hosts 파일저장
+cat <<EOF | sudo tee -a /etc/hosts
+192.168.0.200 master
+192.168.0.201 work1
+192.168.0.202 work2
+192.168.0.203 work3
+EOF
