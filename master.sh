@@ -16,7 +16,7 @@ sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
 free -h
 getenforce
 
-#IPtables
+#IPtables 
 tee /etc/sysctl.d/kubernetes.conf<<EOF
 net.brige.bridge-nf-call-ip6tables = 1
 net.brige.bridge-nf-call-iptables = 1
@@ -42,6 +42,7 @@ sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.t
 systemctl restart containerd
 systemctl enable --now containerd
 
+#k8s repo 1.31 ver install
 cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
