@@ -16,14 +16,6 @@ sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
 free -h
 getenforce
 
-#hosts
-cat <<EOF | sudo tee -a /etc/hosts
-10.10.10.200 master
-10.10.10.201 work1
-10.10.10.202 work2
-10.10.10.203 work3
-EOF
-
 #IPtables
 tee /etc/sysctl.d/kubernetes.conf<<EOF
 net.brige.bridge-nf-call-ip6tables = 1
