@@ -16,7 +16,7 @@ sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
 free -h
 getenforce
 
-#IPtables 
+#IPtables
 tee /etc/sysctl.d/kubernetes.conf<<EOF
 net.brige.bridge-nf-call-ip6tables = 1
 net.brige.bridge-nf-call-iptables = 1
@@ -24,6 +24,8 @@ net.ipv4.ip_forward = 1
 EOF
 
 #containerd kernel
+modprobe overlay
+modprobe br_netfilter
 tee /etc/modules-load.d/containerd.conf <<EOF
 overlay
 br_netfilter
@@ -31,13 +33,16 @@ EOF
 
 sysctl --system
 
-#dnf install -y dnf-utils device-mapper-persistent-data lvm2
+#uilt install
+dnf install dnf-utils net-tools bind-utils iproute-tc wget curl* dnf-plugins-core device-mapper-persistent-data lvm2
+
+#Containerd install
 dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 dnf update -y && dnf install -y containerd.io
 
+#Containerd modify
 mkdir -p /etc/containerd
 containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1
-
 sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
 systemctl restart containerd
 systemctl enable --now containerd
