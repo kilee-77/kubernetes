@@ -55,6 +55,7 @@ dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 
 systemctl enable --now kubelet
 
-#Join command (kubeadm join IP:6443 --token token-key --discovery-token-ca-cert-hash sha256:sha256-key)
-echo 'Join command (masterkey.sh)'
-echo 'kubeadm join IP:6443 --token token-key --discovery-token-ca-cert-hash sha256:sha256-key'
+#CNI setting
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/tigera-operator.yaml
+wget https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/custom-resources.yaml
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/custom-resources.yaml
