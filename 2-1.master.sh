@@ -33,7 +33,7 @@ EOF
 
 sysctl --system
 
-#uilt install
+#utils install
 dnf install dnf-utils net-tools bind-utils iproute-tc wget curl* dnf-plugins-core device-mapper-persistent-data lvm2
 
 #Containerd install
@@ -55,20 +55,24 @@ baseurl=https://pkgs.k8s.io/core:/stable:/v1.31/rpm/
 enabled=1
 gpgcheck=1
 gpgkey=https://pkgs.k8s.io/core:/stable:/v1.31/rpm/repodata/repomd.xml.key
+exclude=kubelet kubeadm kubectl
 EOF
 
 dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
-
 systemctl enable --now kubelet
 
 #CNI setting
 kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.0/manifests/calico.yaml
 
-#k8s init (master only)
-kubeadm init \
---control-plane-endpoint 192.168.0.200 \
---pod-network-cidr 10.10.10.0/16
+#k8s init by yaml (master only)
+kubeadm config print init-defaults > ~/kubeadm-init.yaml
+
+sed -i 's/advertiseAddress: 1.2.3.4/advertiseAddress: 192.168.0.200/' ~/kubeadmin-init.yaml
+sed -i 's/name: node/name: master/' ~/kubeadmin-init.yaml
+sed -i 's/serviceSubnet: 10.96.0.0\/12/serviceSubnet: 10.10.10.0\/16/' ~/kubeadmin-init.yaml
 
 mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 chown $(id -u):$(id -g) $HOME/.kube/config
+
+kubeadm token create --print-join-command
