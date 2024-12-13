@@ -61,9 +61,6 @@ EOF
 dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 systemctl enable --now kubelet
 
-#CNI setting
-kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.0/manifests/calico.yaml
-
 #k8s init by yaml (master only)
 kubeadm config print init-defaults > ~/kubeadm-init.yaml
 
@@ -74,5 +71,8 @@ sed -i 's/serviceSubnet: 10.96.0.0\/12/serviceSubnet: 10.10.10.0\/16/' ~/kubeadm
 mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 chown $(id -u):$(id -g) $HOME/.kube/config
+
+#CNI setting
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.0/manifests/calico.yaml
 
 kubeadm token create --print-join-command
