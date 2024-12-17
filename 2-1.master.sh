@@ -64,9 +64,12 @@ systemctl enable --now kubelet
 #k8s init by yaml (master only)
 kubeadm config print init-defaults > ~/kubeadm-init.yaml
 
-sed -i 's/advertiseAddress: 1.2.3.4/advertiseAddress: 192.168.0.200/' ~/kubeadmin-init.yaml
-sed -i 's/name: node/name: master/' ~/kubeadmin-init.yaml
-sed -i 's/serviceSubnet: 10.96.0.0\/12/serviceSubnet: 10.10.10.0\/16/' ~/kubeadmin-init.yaml
+sed -i 's/advertiseAddress: 1.2.3.4/advertiseAddress: 192.168.0.200/' ~/kubeadm-init.yaml
+sed -i 's/name: node/name: master/' ~/kubeadm-init.yaml
+sed -i 's/serviceSubnet: 10.96.0.0\/12/serviceSubnet: 10.10.10.0\/16/' ~/kubeadm-init.yaml
+
+#k8s init (master only)
+kubeadm init --config=kubeadm-init.yaml
 
 mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
